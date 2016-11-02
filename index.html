@@ -7,9 +7,8 @@ function upload(s) {
   var xhr = new XMLHttpRequest();
   var url = "./server/";
   var params = "module=upload"
-  var size = s * 1024 * 1024; //s'Mb
-  var str = "This text is so uncool, deal with it. ";
-  var buffer = new ArrayBuffer(size/8);
+  var size = s * 1024 * 1024; //s'MB
+  var buffer = new ArrayBuffer(size);
   var int8View = new Int8Array(buffer);
   for (var i=0; i<int8View.length; i++) {
     int8View[i] = i;
@@ -22,7 +21,7 @@ function upload(s) {
     if(xhr.readyState == 4 && xhr.status == 200) {
       var endTime = new Date().getTime();
       var elapsedTime = endTime - startTime;
-      var uploadSpeed = (s/8/(elapsedTime/1000));
+      var uploadSpeed = (s*8/(elapsedTime/1000));
       console.log(uploadSpeed);
     }
   }
@@ -33,7 +32,7 @@ function download(s) {
   var xhr = new XMLHttpRequest();
   var url = "./server/";
   var params = "module=download&size="
-  var size = s * 1024 *1024; // s'Mb
+  var size = s * 1024 *1024; // s'MB
   xhr.open('GET', url+"?"+params+size, true);
   //console.log(xhr);
   xhr.send();
@@ -45,7 +44,7 @@ function download(s) {
     if (xhr.readyState == 4 && xhr.status == 200 ){
       var endTime = new Date().getTime();
       var elapsedTime = endTime - startTime; //ms
-      var downloadSpeed = (s/(elapsedTime/1000));
+      var downloadSpeed = (s*8/(elapsedTime/1000));
       console.log(downloadSpeed);
       document.getElementById('download_res').innerHTML = downloadSpeed;
     }
@@ -58,5 +57,6 @@ function download(s) {
   <button type="button" onclick="download(50)"> Download Test </button>
   <button type="button" onclick="upload(20)"> Upload Test </button>
   <div id="download_res"></div>
+  
 </body>
 </html>
