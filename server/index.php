@@ -34,5 +34,5 @@ if (!empty($_GET['module']) && $_GET['module'] == 'download') {
 else if (!empty($_GET['module']) && $_GET['module'] == 'upload') {
     header('Cache-Control: no-cache, no-store, no-transform');
     header('Pragma: no-cache'); // Support for HTTP 1.0
-    echo $_GET['module'], $_POST['data'];
+    echo $_GET['module'];
 }
