@@ -2,7 +2,9 @@
 <head>
 <title>Speed test</title>
 <script type="text/javascript">
-function upload(s) {
+function upload() {
+  s = document.getElementById('u_s').value;
+  if (s >= 200) s = 200;
   console.log("Start upload");
   var xhr = new XMLHttpRequest();
   var url = "./server/";
@@ -28,7 +30,9 @@ function upload(s) {
   }
 }
 // Creating Dowload Speed Test request to server
-function download(s) {
+function download() {
+  s = document.getElementById('d_s').value;
+  if (s >= 200) s = 200;
   console.log("Start download");
   var xhr = new XMLHttpRequest();
   var url = "./server/";
@@ -80,8 +84,14 @@ table, th, td {
 </style>
 </head>
 <body>
-  <button type="button" onclick="download(4)"> Download Test </button>
-  <button type="button" onclick="upload(4)"> Upload Test </button>
+  <div>
+    <span>下載大小(MB)：<input id="d_s" type="number" min="0" max="200" value="4"></span> 
+    <button type="button" onclick="download(40)"> Download Test </button>
+  </div>
+  <div>
+    <span>上傳大小(MB)：<input id="u_s" type="number" min="0" max="200" value="4"></span>
+    <button type="button" onclick="upload(20)"> Upload Test </button>
+  </div>
   <div style="margin:0px auto;">
     <table id="res" style="width:70%">
       <tr>
@@ -90,6 +100,5 @@ table, th, td {
       </tr>
     </table>
   </div>
-  
 </body>
 </html>
