@@ -7,16 +7,14 @@ function upload() {
   if (s >= 200) s = 200;
   console.log("Start upload");
   var xhr = new XMLHttpRequest();
-  var url = "./server/";
-  var params = "module=upload"
+  var url = "./server/?module=upload";
   var size = s * 1024 * 1024; //s'MB
   var buffer = new ArrayBuffer(size);
   var int8View = new Int8Array(buffer);
-  for (var i=0; i<int8View.length; i++) {
-    int8View[i] = i;
-  }
-  xhr.open('POST', url+"?"+params, true);
-  xhr.send(int8View);
+  var blob = new Blob([int8View], {type: "application/octet-stream"});
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader("Content-Type", "application/octet-stream")
+  xhr.send(blob);
   var startTime = new Date().getTime();
   xhr.onreadystatechange = processUploadRequest;
   function processUploadRequest() {
