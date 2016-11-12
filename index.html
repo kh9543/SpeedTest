@@ -1,6 +1,7 @@
 <html>
 <head>
 <title>Speed test</title>
+<meta charset="UTF-8">
 <script type="text/javascript">
 function upload() {
   s = document.getElementById('u_s').value;
@@ -17,6 +18,7 @@ function upload() {
   }
   xhr.open('POST', url+"?"+params, true);
   xhr.send(int8View);
+  int8View = null;
   var startTime = new Date().getTime();
   xhr.onreadystatechange = processUploadRequest;
   function processUploadRequest() {
@@ -25,6 +27,7 @@ function upload() {
       var elapsedTime = endTime - startTime;
       var uploadSpeed = (s*8/(elapsedTime/1000));
       console.log(uploadSpeed);
+      console.log(elapsedTime);
       createResult("upload", uploadSpeed);
     }
   }
@@ -51,6 +54,7 @@ function download() {
       var elapsedTime = endTime - startTime; //ms
       var downloadSpeed = (s*8/(elapsedTime/1000));
       console.log(downloadSpeed);
+      console.log(elapsedTime);
       //document.getElementById('res').innerHTML = downloadSpeed;
       createResult("download", downloadSpeed);
     }
