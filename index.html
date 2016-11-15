@@ -12,11 +12,20 @@ function upload() {
   var buffer = new ArrayBuffer(size);
   var int8View = new Int8Array(buffer);
   var blob = new Blob([int8View], {type: "application/octet-stream"});
+  xhr.upload.addEventListener("progress", uploadProgress, false);
+  xhr.upload.addEventListener("error", uploadError, false);
+  xhr.onreadystatechange = processUploadRequest; 
   xhr.open('POST', url, true);
-  xhr.setRequestHeader("Content-Type", "application/octet-stream")
+  xhr.setRequestHeader("Content-Type", "application/octet-stream");
   xhr.send(blob);
   var startTime = new Date().getTime();
-  xhr.onreadystatechange = processUploadRequest;
+  function uploadError(e) {
+      console.log(e+" "+xhr.status);
+  }
+  function uploadProgress(e) {
+      if(e.lengthComputable)
+          console.log(e.loaded/e.total);
+  }
   function processUploadRequest() {
     if(xhr.readyState == 4 && xhr.status == 200) {
       var endTime = new Date().getTime();
@@ -36,12 +45,14 @@ function download() {
   var url = "./server/";
   var params = "module=download&size="
   var size = s * 1024 *1024; // s'MB
+  xhr.addEventListener("progress", downloadProgress, false);
+  xhr.onreadystatechange = processDownloadRequest;
   xhr.open('GET', url+"?"+params+size, true);
-  //console.log(xhr);
   xhr.send();
   var startTime = new Date().getTime();
-  //event listener for http request
-  xhr.onreadystatechange = processDownloadRequest;
+  function downloadProgress(e) {
+      console.log(e.loaded/size);
+  }
   function processDownloadRequest() {
     //msg received 
     if (xhr.readyState == 4 && xhr.status == 200 ){
@@ -49,7 +60,6 @@ function download() {
       var elapsedTime = endTime - startTime; //ms
       var downloadSpeed = (s*8/(elapsedTime/1000));
       console.log(downloadSpeed);
-      //document.getElementById('res').innerHTML = downloadSpeed;
       createResult("download", downloadSpeed);
     }
   }
