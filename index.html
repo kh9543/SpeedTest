@@ -25,6 +25,7 @@ function upload() {
       var elapsedTime = endTime - startTime;
       var uploadSpeed = (s*8/(elapsedTime/1000));
       console.log(uploadSpeed);
+      console.log(elapsedTime);
       createResult("upload", uploadSpeed);
     }
   }
@@ -51,6 +52,7 @@ function download() {
       var elapsedTime = endTime - startTime; //ms
       var downloadSpeed = (s*8/(elapsedTime/1000));
       console.log(downloadSpeed);
+      console.log(elapsedTime);
       //document.getElementById('res').innerHTML = downloadSpeed;
       createResult("download", downloadSpeed);
     }
