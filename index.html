@@ -2,10 +2,8 @@
 <head>
 <title>Speed test</title>
 <script type="text/javascript">
-function upload() {
-  s = document.getElementById('u_s').value;
-  if (s >= 200) s = 200;
-  console.log("Start upload");
+function upload(s) {
+  console.log("Start upload: "+ s);
   var xhr = new XMLHttpRequest();
   var url = "./server/?module=upload";
   var size = s * 1024 * 1024; //s'MB
@@ -13,15 +11,11 @@ function upload() {
   var int8View = new Int8Array(buffer);
   var blob = new Blob([int8View], {type: "application/octet-stream"});
   xhr.upload.addEventListener("progress", uploadProgress, false);
-  xhr.upload.addEventListener("error", uploadError, false);
   xhr.onreadystatechange = processUploadRequest; 
   xhr.open('POST', url, true);
   xhr.setRequestHeader("Content-Type", "application/octet-stream");
   xhr.send(blob);
   var startTime = new Date().getTime();
-  function uploadError(e) {
-      console.log(e+" "+xhr.status);
-  }
   function uploadProgress(e) {
       if(e.lengthComputable)
           console.log(e.loaded/e.total);
@@ -33,14 +27,14 @@ function upload() {
       var uploadSpeed = (s*8/(elapsedTime/1000));
       console.log(uploadSpeed);
       createResult("upload", uploadSpeed);
+      if (elapsedTime < 8000 && s <= 128)
+          upload(s*2);
     }
   }
 }
 // Creating Dowload Speed Test request to server
-function download() {
-  s = document.getElementById('d_s').value;
-  if (s >= 200) s = 200;
-  console.log("Start download");
+function download(s) {
+  console.log("Start download: "+s);
   var xhr = new XMLHttpRequest();
   var url = "./server/";
   var params = "module=download&size="
@@ -61,10 +55,12 @@ function download() {
       var downloadSpeed = (s*8/(elapsedTime/1000));
       console.log(downloadSpeed);
       createResult("download", downloadSpeed);
+      console.log(elapsedTime)
+      if(elapsedTime < 8000 && s <= 128)
+          download(s*2);
     }
   }
 }
-
 function createResult(type, num) {
   var newTr = document.createElement("tr");
   var newTh_D = document.createElement("th");
@@ -93,12 +89,8 @@ table, th, td {
 </head>
 <body>
   <div>
-    <span>下載大小(MB)：<input id="d_s" type="number" min="0" max="200" value="4"></span> 
-    <button type="button" onclick="download(40)"> Download Test </button>
-  </div>
-  <div>
-    <span>上傳大小(MB)：<input id="u_s" type="number" min="0" max="200" value="4"></span>
-    <button type="button" onclick="upload(20)"> Upload Test </button>
+    <button type="button" onclick="download(1)"> Download Test </button>
+    <button type="button" onclick="upload(1)"> Upload Test </button>
   </div>
   <div style="margin:0px auto;">
     <table id="res" style="width:70%">
