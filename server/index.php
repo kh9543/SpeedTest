@@ -3,6 +3,7 @@ mb_internal_encoding('UTF-8');
 // Allow cross-site HTTP requests
 header('Access-Control-Allow-Origin: *');
 // The connection must be closed after each response. Allowing the client to correctly estimate the network latency.
+header('IP_addr: '.$_SERVER['REMOTE_ADDR']);
 header('Connection: close');
 if (!empty($_GET['module']) && $_GET['module'] == 'download') {
     // The response should never be cached or even stored on a hard drive
@@ -19,7 +20,7 @@ if (!empty($_GET['module']) && $_GET['module'] == 'download') {
         $contentSize = min($contentSize, 200 * 1024 * 1024); // Maximum value: 200MB
     }
     // Provide a base string which will be provided as a response to the client
-    $baseString = 'This text is so uncool, deal with it. ';
+    $baseString = 'This text is for ntu speed test, and for speed test only. ';
     $baseLength = mb_strlen($baseString);
     // Output the string as much as necessary to reach the required size
     for ($i = 0 ; $i < intval($contentSize / $baseLength) ; $i++) {
@@ -34,5 +35,4 @@ if (!empty($_GET['module']) && $_GET['module'] == 'download') {
 else if (!empty($_GET['module']) && $_GET['module'] == 'upload') {
     header('Cache-Control: no-cache, no-store, no-transform');
     header('Pragma: no-cache'); // Support for HTTP 1.0
-    echo $_GET['module'];
 }
