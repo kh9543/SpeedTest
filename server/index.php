@@ -1,4 +1,10 @@
 <?php
+function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+	return ((float)$usec + (float)$sec);
+}
+
 mb_internal_encoding('UTF-8');
 // Allow cross-site HTTP requests
 header('Access-Control-Allow-Origin: *');
@@ -30,9 +36,11 @@ if (!empty($_GET['module']) && $_GET['module'] == 'download') {
     if (($lastBytes = $contentSize % $baseLength) > 0) {
         echo substr($baseString, 0, $lastBytes);
     }
+	//echo microtime_float()-$_SERVER['REQUEST_TIME_FLOAT'];
 }
 
 else if (!empty($_GET['module']) && $_GET['module'] == 'upload') {
     header('Cache-Control: no-cache, no-store, no-transform');
     header('Pragma: no-cache'); // Support for HTTP 1.0
+	//echo microtime_float()-$_SERVER['REQUEST_TIME_FLOAT'];
 }

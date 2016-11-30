@@ -27,14 +27,23 @@
 			border-collapse: collapse;
 		}
 		th, td {
-			margin: 0px;
+			height: 20px;
 			padding: 4px;
-			height: 14px;
 			border: 1px solid #ddd;
 			text-align: left;
 		}
+		td:first-child {
+			width: 32%;
+		}
+		td:nth-child(2){
+			width: 42%;
+		}
+
 		tbody > tr:nth-child(odd) {
-			background-color: #f2f2f2
+			background-color: #f2f2f2;
+		}
+		tbody > tr:hover {
+			background-color: #B2E1FF;
 		}
 		footer {
 			padding: 10px;
@@ -44,7 +53,7 @@
 			margin: 2.5px;
 			width: 440px;
 			height: 500px;
-			font-size: 12px;
+			font-size: 13px;
 			font-weight: bold;
 			color: #0B333C;
 			text-align: center;
@@ -59,7 +68,7 @@
 			margin: 2.5px;
 			width: 440px;
 			height: 500px;
-			font-size: 12px;
+			font-size: 13px;
 			font-weight: bold;
 			color: #0B333C;
 			text-align: center;
@@ -114,13 +123,10 @@
 			background: linear-gradient(#5EC1FF, #009DFF);
 		}
 		.progress > span {
-			left: 39%;
+			left: 40%;
 			top: 0px;
 			position: absolute;
 		}
-        .active {
-        	left: 35%;   
-        }
 		.record {
 			margin-bottom: 10px;
 		}
@@ -173,6 +179,11 @@
                      div += tasks[i];
                   }
                   document.getElementById("upload_result").value = (sum/div).toFixed(4);
+				  var xhr_u = new XMLHttpRequest();
+				  var url = "./server/report.php";
+				  xhr_u.open('POST', url, true);
+				  xhr_u.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				  xhr_u.send('speed='+(sum/div).toFixed(4)+'&type=upload');
                   res_u = [];
                   enableBtn();
               }
@@ -221,6 +232,11 @@
                   }
                   document.getElementById("download_result").value = (sum/div).toFixed(4);
                   res_d = [];
+				  var xhr_u = new XMLHttpRequest();
+				  var url = "./server/report.php";
+				  xhr_u.open('POST', url, true);
+				  xhr_u.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				  xhr_u.send('speed='+(sum/div).toFixed(4)+'&type=download');
               	  enableBtn();
 		      	}
 		      }
@@ -272,23 +288,10 @@
 						</tr>	
 					</thead>
 					<tbody>
-						<tr>
-							<td>36.228.159.203</td>
-							<td>2016-11-28 19:14</td>
-							<td>37.4943</td>
-						</tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
+						<?php 
+							include 'server/history.php';
+							history("download");
+						?>
 					</tbody>
 				</table>
 			</div>
@@ -313,23 +316,9 @@
 						</tr>	
 					</thead>
 					<tbody>
-						<tr>
-							<td>36.228.159.203</td>
-							<td>2016-11-28 19:14</td>
-							<td>37.4943</td>
-						</tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
-						<tr><td></td><td></td><td></td></tr>
+						<?php
+							history('upload');
+						?>
 					</tbody>
 				</table>
 			</div>
