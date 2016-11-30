@@ -38,7 +38,6 @@
 		td:nth-child(2){
 			width: 42%;
 		}
-
 		tbody > tr:nth-child(odd) {
 			background-color: #f2f2f2;
 		}
@@ -168,7 +167,7 @@
 		      var uploadSpeed = (s*8/(elapsedTime/1000));
 		      console.log(uploadSpeed);
                       res_u.push(uploadSpeed);
-		      if (elapsedTime < 8000 && s <= 128)
+		      if (elapsedTime < 8000 && s < 128)
 		          upload(s*2);
               else {
                   console.log(res_u);
@@ -220,7 +219,7 @@
 		      console.log(downloadSpeed);
 		      //console.log(elapsedTime)
 		      res_d.push(downloadSpeed);
-		      if(elapsedTime < 8000 && s <= 128)
+		      if(elapsedTime < 8000 && s < 128)
 		          download(s*2);
 		      else{
 		          console.log(res_d);

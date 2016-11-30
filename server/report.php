@@ -3,7 +3,7 @@
 	$ip = $_SERVER['REMOTE_ADDR']; 
     $speed = filter_var($_POST['speed'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $type = $_POST['type'];
-    if(isset($speed) && ($type=='upload' || $type=='download')) {
+    if(isset($speed) && $speed > 0 && ($type=='upload' || $type=='download')) {
         $sql = "INSERT INTO records(ip,speed,type) VALUES('$ip','$speed','$type')";
 		// Create connection
     	$conn = mysqli_connect($host, $username, $password, $dbname);
