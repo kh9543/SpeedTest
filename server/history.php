@@ -4,7 +4,7 @@
 		$ip = $_SERVER['REMOTE_ADDR']; 
     	$sql = "SELECT * FROM records WHERE ip = '$ip' AND type = '$type' ORDER BY time DESC LIMIT 10";
 		// Create connection
-    	$conn = mysqli_connect($host, $username, $password, $dbname);
+		$conn = mysqli_connect($host, $username, $password, $dbname);
    		// Check connection
     	if (!$conn) {
       		die("Connection failed: " . mysqli_connect_error());
