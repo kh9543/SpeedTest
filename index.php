@@ -131,15 +131,77 @@
 		}
 	</style>
 	<script type="text/javascript">
- 		var res_d = [];
+	(function() {
+		if(!window.Blob)
+			return;
+		var btns;
+		var upload_err = 0;
+		var upload_fin = 0;
+		var download_err = 0;
+		var download_fin = 0;
+		var res_d = [];
 		var res_u = [];
-        var tasks = [1, 2, 4, 8, 16, 32, 64, 128];
-        var btns = document.getElementsByTagName("button");
+	    var tasks = [1, 2, 4, 8, 16, 32, 64, 128];
+	    window.onload = function() {
+			var downloadBar = new progressBar('download'); 
+			var uploadBar = new progressBar('upload');
+			btns = document.getElementsByClassName("btn");
+			document.getElementById('download_btn').onclick = function(){
+				disableBtn();
+				download(1);
+				for(var i = 1; i<=30; i++)
+					(function(j){setTimeout(function timer(){
+						downloadBar.loading(Math.round(j*97/30))
+						if(j == 30 && download_fin > 0) {
+							document.getElementById("download_result").value = download_fin;
+							downloadBar.loading(100);
+							enableBtn();
+							download_fin = 0;
+						}
+						else if (j == 30 && download_fin == 0){
+							var interval_id = setInterval(function(){
+								if(download_fin > 0) {
+									document.getElementById("download_result").value = download_fin;
+									downloadBar.loading(100);
+									enableBtn();
+									download_fin = 0;
+									clearInterval(interval_id);
+								}
+							}, 1000);
+						}
+					}, j*500)})(i);
+			}
+			document.getElementById('upload_btn').onclick = function(){
+				disableBtn();
+				upload(1);
+	            for(var i = 1; i<=30; i++)
+	                (function(j){setTimeout(function timer(){
+	                	if(upload_err == 1) {
+	                		uploadBar.loading(0);
+	                		return;
+	                	}
+	                	uploadBar.loading(Math.round(j*97/30))
+	                	if(j == 30 && upload_fin > 0) {
+							document.getElementById("upload_result").value = upload_fin;
+							uploadBar.loading(100);
+							enableBtn();
+							upload_fin = 0;
+						}
+	                	else if (j == 30 && upload_fin == 0){
+							var interval_id = setInterval(function(){
+								if(upload_fin > 0) {
+									document.getElementById("upload_result").value = upload_fin;
+									uploadBar.loading(100);
+									enableBtn();
+									upload_fin = 0;
+									clearInterval(interval_id);
+								}
+							}, 1000);
+						}
+	                }, j*500)})(i);
+	        }
+		}
 		function upload(s) {
-          if(s == 1) {
-          	disableBtn();
-          	document.getElementById('upload_tasks').style.left = "35%";
-          }
 		  console.log("Start upload: "+ s);
 		  var xhr = new XMLHttpRequest();
 		  var url = "./server/?module=upload";
@@ -156,9 +218,9 @@
 		  function uploadProgress(e) {
 		  	if(e.lengthComputable) {
 		  		//console.log(e.loaded/e.total);
-                document.getElementById('upload_tasks').innerHTML = "Testing "+ s +"(MB): " + Math.round(e.loaded*100/e.total)+"%";
-                document.getElementById('upload_progress').style.width = Math.round(e.loaded*100/e.total)+"%";
-            }
+	            //document.getElementById('upload_tasks').innerHTML = "Testing "+ s +"(MB): " + Math.round(e.loaded*100/e.total)+"%";
+				//document.getElementById('upload_progress').style.width = Math.round(e.loaded*100/e.total)+"%";
+	        }
 		  }
 		  function processUploadRequest() {
 		    if(xhr.readyState == 4 && xhr.status == 200) {
@@ -166,39 +228,40 @@
 		      var elapsedTime = endTime - startTime;
 		      var uploadSpeed = (s*8/(elapsedTime/1000));
 		      console.log(uploadSpeed);
-                      res_u.push(uploadSpeed);
-		      if (elapsedTime < 8000 && s < 128)
+	                  res_u.push(uploadSpeed);
+		      if (elapsedTime < 4000 && s < 128)
 		          upload(s*2);
-              else {
-                  console.log(res_u);
-                  var sum = 0;
-                  var div = 0;
-                  for(var i = 0; i < res_u.length; i++ ) {
-                     sum += res_u[i]*tasks[i];
-                     div += tasks[i];
-                  }
-                  document.getElementById("upload_result").value = (sum/div).toFixed(4);
+	          else {
+	              console.log(res_u);
+	              var sum = 0;
+	              var div = 0;
+	              for(var i = 0; i < res_u.length; i++ ) {
+	                 sum += res_u[i]*tasks[i];
+	                 div += tasks[i];
+	              }
+	              upload_fin = (sum/div).toFixed(4);
 				  var xhr_u = new XMLHttpRequest();
 				  var url = "./server/report.php";
 				  xhr_u.open('POST', url, true);
 				  xhr_u.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				  xhr_u.send('speed='+(sum/div).toFixed(4)+'&type=upload');
-                  res_u = [];
-                  enableBtn();
-              }
+	              res_u = [];
+	              //upload_fin = 1;
+	          }
+		    }
+		    else if (xhr.readyState == 4 && xhr.status != 200) {
+		    	document.getElementById("upload_result").value = "null";
+		    	alert("出現錯誤，請嘗試重新整理頁面");
+		    	upload_err = 1;
 		    }
 		  }
 		}
 		// Creating Dowload Speed Test request to server
 		function download(s) {
-          if(s == 1) {
-          	disableBtn();
-          	document.getElementById('download_tasks').style.left = "35%";
-          }
 		  console.log("Start download: "+s);
 		  var xhr = new XMLHttpRequest();
 		  var url = "./server/";
-		  var params = "module=download&size="
+		  var params = "module=download&size=";
 		  var size = s * 1024 *1024; // s'MB
 		  xhr.addEventListener("progress", downloadProgress, false);
 		  xhr.onreadystatechange = processDownloadRequest;
@@ -207,8 +270,8 @@
 		  var startTime = new Date().getTime();
 		  function downloadProgress(e) {
 		      //console.log(e.loaded/size);
-		      document.getElementById('download_tasks').innerHTML = "Testing "+ s +"(MB): " + Math.round(e.loaded*100/size)+"%";
-		      document.getElementById('download_progress').style.width = Math.round(e.loaded*100/size)+"%"; 
+		      //document.getElementById('download_tasks').innerHTML = "Testing "+ s +"(MB): " + Math.round(e.loaded*100/size)+"%";
+		      //document.getElementById('download_progress').style.width = Math.round(e.loaded*100/size)+"%"; 
 		  }
 		  function processDownloadRequest() {
 		    //msg received 
@@ -219,36 +282,46 @@
 		      console.log(downloadSpeed);
 		      //console.log(elapsedTime)
 		      res_d.push(downloadSpeed);
-		      if(elapsedTime < 8000 && s < 128)
+		      if(elapsedTime < 4000 && s < 128)
 		          download(s*2);
 		      else{
 		          console.log(res_d);
-                  var sum = 0;
-                  var div = 0;
-                  for(var i = 0; i < res_d.length; i++ ) {
-                  	sum += res_d[i]*tasks[i];
-                  	div += tasks[i];
-                  }
-                  document.getElementById("download_result").value = (sum/div).toFixed(4);
-                  res_d = [];
+	              var sum = 0;
+	              var div = 0;
+	              for(var i = 0; i < res_d.length; i++ ) {
+	              	sum += res_d[i]*tasks[i];
+	              	div += tasks[i];
+	              }
+	              download_fin = (sum/div).toFixed(4);
+	              res_d = [];
 				  var xhr_u = new XMLHttpRequest();
 				  var url = "./server/report.php";
 				  xhr_u.open('POST', url, true);
 				  xhr_u.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				  xhr_u.send('speed='+(sum/div).toFixed(4)+'&type=download');
-              	  enableBtn();
+				  //download_fin = 1;
 		      	}
 		      }
 		    }
-		 }	
-        function disableBtn() {
-          btns[0].disabled = true;
-          btns[1].disabled = true;
-        }
-        function enableBtn() {
-          btns[0].disabled = false;
-          btns[1].disabled = false;
-        }
+		}
+		function progressBar(n) {
+			this.bar = document.getElementById(n+'_progress');
+			this.text = document.getElementById(n+'_tasks');
+		}
+		progressBar.prototype.loading = function (x) {
+			this.bar.style.width = x+"%";
+			this.text.innerHTML = "Testing: "+x+"%";
+			
+		}
+	    function disableBtn() {
+	    	btns[0].disabled = true;
+	    	btns[1].disabled = true;
+	    }
+	    function enableBtn() {
+	    	btns[0].disabled = false;
+	    	btns[1].disabled = false;
+		}
+	})();	
 	</script>
 </head>
 <body>
@@ -274,7 +347,7 @@
 				<div>
 					<span>Download speed = <input type="text" id="download_result"> Mbps </span>
 				</div>
-				<button type="button" class="download_button" onclick="download(1);"> 下載測試(Download Test)</button>
+				<button type="button" id="download_btn" class="btn download_button"> 下載測試(Download Test)</button>
 				<div>
 					<p class="record">這個IP最近的下載紀錄</p>
 				</div>
@@ -302,7 +375,7 @@
 				<div>
 					<span>Upload speed = <input type="text" id="upload_result"> Mbps </span>
 				</div>
-				<button type="button" class="upload_button" onclick="upload(1)"> 上傳測試(Upload Test)</button>
+				<button type="button" id="upload_btn" class="btn upload_button"> 上傳測試(Upload Test)</button>
 				<div>
 					<p class="record">這個IP最近的上傳紀錄</p>
 				</div>
@@ -340,5 +413,7 @@
 			</p>
 		</footer>
 	<div>
+	<script>  
+	</script>
 </body>
 </html>
