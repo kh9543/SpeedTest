@@ -106,7 +106,7 @@
 		.progress {
 			position: relative;
 			height: 20px;
-			line-height: 20px;
+			line-height: 22px;
 			margin: 20px auto;
 			margin-bottom: 10px;
 			background-color: white;
