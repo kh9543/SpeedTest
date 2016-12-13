@@ -300,10 +300,10 @@
 		  var records = [];
 		  xhr.addEventListener("progress", downloadProgress, false);
 		  xhr.addEventListener("error", errorHandler_d, false);
-		  xhr.timeout = t;
-		  xhr.onreadystatechange = processDownloadRequest;
-		  xhr.ontimeout = downloadTimeout; 
 		  xhr.open('GET', url+"?"+params+size, true);
+		  xhr.timeout = t;
+                  xhr.onreadystatechange = processDownloadRequest;
+                  xhr.ontimeout = downloadTimeout;
 		  xhr.send();
 		  var startTime = new Date().getTime();
 		  function downloadTimeout(e) {
