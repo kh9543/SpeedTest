@@ -222,10 +222,10 @@
 		  var records = [];
 		  xhr.upload.addEventListener("progress", uploadProgress, false);
 		  xhr.addEventListener("error", errorHandler_u, false);
-		  xhr.timeout = t;
-		  xhr.onreadystatechange = processUploadRequest;
-		  xhr.ontimeout = uploadTimeout;
 		  xhr.open('POST', url, true);
+		  xhr.timeout = t;
+                  xhr.onreadystatechange = processUploadRequest;
+                  xhr.ontimeout = uploadTimeout;
 		  xhr.setRequestHeader("Content-Type", "application/octet-stream");
 		  xhr.send(blob);
 		  var startTime = new Date().getTime();
@@ -481,8 +481,6 @@
 				<a href="mailto:speed@ntu.edu.tw">E-mail us</a>
 			</p>
 		</footer>
-	<div>
-	<script>  
-	</script>
+	</div>
 </body>
 </html>
