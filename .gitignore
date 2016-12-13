@@ -1,0 +1,4 @@
+.htaccess
+*.swp
+*.DS_Store
+server/db/config.php
