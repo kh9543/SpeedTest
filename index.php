@@ -161,16 +161,18 @@
 						if(j == 31 && download_fin > 0) {
 							document.getElementById("download_result").value = download_fin;
 							downloadBar.loading(100);
-							enableBtn();
 							download_fin = 0;
+							total_d = 0;
+							enableBtn();
 						}
 						else if (j == 31 && download_fin != 1){
 							var interval_id = setInterval(function(){
 								if(download_fin > 0) {
 									document.getElementById("download_result").value = download_fin;
 									downloadBar.loading(100);
-									enableBtn();
 									download_fin = 0;
+									total_d = 0;
+									enableBtn();
 									clearInterval(interval_id);
 								}
 							}, 500);
@@ -190,16 +192,18 @@
 	                	if(j == 31 && upload_fin > 0) {
 							document.getElementById("upload_result").value = upload_fin;
 							uploadBar.loading(100);
-							enableBtn();
 							upload_fin = 0;
+							total_u = 0;
+							enableBtn();
 						}
 	                	else if (j == 31 && upload_fin == 0){
 							var interval_id = setInterval(function(){
 								if(upload_fin > 0) {
 									document.getElementById("upload_result").value = upload_fin;
 									uploadBar.loading(100);
-									enableBtn();
 									upload_fin = 0;
+									total_u = 0;
+									enableBtn();
 									clearInterval(interval_id);
 								}
 							}, 500);
