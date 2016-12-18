@@ -2,7 +2,10 @@
 	function history($type) {
 		include 'db/config.php';
 		$ip = $_SERVER['REMOTE_ADDR']; 
-    	$sql = "SELECT * FROM records WHERE ip = '$ip' AND type = '$type' ORDER BY time DESC LIMIT 10";
+                if($type=='upload')
+    	            $sql = "SELECT * FROM upload_record WHERE ip = '$ip' ORDER BY time DESC LIMIT 10";
+                else
+                    $sql = "SELECT * FROM download_record WHERE ip = '$ip' ORDER BY time DESC LIMIT 10";
 		// Create connection
 		$conn = mysqli_connect($host, $username, $password, $dbname);
    		// Check connection

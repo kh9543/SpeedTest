@@ -36,11 +36,11 @@ if (!empty($_GET['module']) && $_GET['module'] == 'download') {
     if (($lastBytes = $contentSize % $baseLength) > 0) {
         echo substr($baseString, 0, $lastBytes);
     }
-	//echo microtime_float()-$_SERVER['REQUEST_TIME_FLOAT'];
+    //error_log( microtime_float()-$_SERVER['REQUEST_TIME_FLOAT']);
 }
 
 else if (!empty($_GET['module']) && $_GET['module'] == 'upload') {
     header('Cache-Control: no-cache, no-store, no-transform');
     header('Pragma: no-cache'); // Support for HTTP 1.0
-	//echo microtime_float()-$_SERVER['REQUEST_TIME_FLOAT'];
+    //error_log(microtime_float()-$_SERVER['REQUEST_TIME_FLOAT']);
 }

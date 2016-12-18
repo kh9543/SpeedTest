@@ -106,7 +106,7 @@
 		.progress {
 			position: relative;
 			height: 20px;
-			line-height: 22px;
+			line-height: 20px;
 			margin: 20px auto;
 			margin-bottom: 10px;
 			background-color: white;
@@ -132,8 +132,11 @@
 	</style>
 	<script type="text/javascript">
 	(function() {
-		if(!window.Blob)
-			return;
+		if(!window.Blob){
+			alert("抱歉，測速無法在您的瀏覽器運作，請使用 IE > 10 或 Chrome > 20，頁面三秒後將轉至Flash測速");
+                        setTimeout(function(){window.location.href = "http://speed.ntu.edu.tw";}, 3000 );
+                        return;
+                }
 		var btns;
 		var upload_err = 0;
 		var upload_fin = 0;
@@ -143,8 +146,9 @@
 		var total_d = 0;
 		var res_d = [];
 		var res_u = [];
-	    var tasks = [1, 2, 4, 8, 16, 32, 64, 128];
-	    window.onload = function() {
+                var ip_add = "";
+	        var tasks = [1, 2, 4, 8, 16, 32, 64, 128];
+	        window.onload = function() {
 			var downloadBar = new progressBar('download'); 
 			var uploadBar = new progressBar('upload');
 			btns = document.getElementsByClassName("btn");
@@ -160,15 +164,17 @@
 						downloadBar.loading(Math.round(j*100/31))
 						if(j == 31 && download_fin > 0) {
 							document.getElementById("download_result").value = download_fin;
+                                                        report(download_fin, "download", createTr);
 							downloadBar.loading(100);
 							download_fin = 0;
 							total_d = 0;
 							enableBtn();
 						}
-						else if (j == 31 && download_fin != 1){
+						else if (j == 31 && download_fin == 1){
 							var interval_id = setInterval(function(){
 								if(download_fin > 0) {
 									document.getElementById("download_result").value = download_fin;
+                                                                        report(download_fin, "download", createTr);
 									downloadBar.loading(100);
 									download_fin = 0;
 									total_d = 0;
@@ -191,6 +197,7 @@
 	                	uploadBar.loading(Math.round(j*100/31))
 	                	if(j == 31 && upload_fin > 0) {
 							document.getElementById("upload_result").value = upload_fin;
+                                                        report(upload_fin, "upload", createTr);
 							uploadBar.loading(100);
 							upload_fin = 0;
 							total_u = 0;
@@ -200,6 +207,7 @@
 							var interval_id = setInterval(function(){
 								if(upload_fin > 0) {
 									document.getElementById("upload_result").value = upload_fin;
+                                                                        report(upload_fin, "upload", createTr);
 									uploadBar.loading(100);
 									upload_fin = 0;
 									total_u = 0;
@@ -246,7 +254,6 @@
 	        sum += uploadSpeed * s * (slice_s/size);
 	        div += s * slice_s/size;
 	        upload_fin = (sum/div).toFixed(4);
-			report(upload_fin, "upload");
 	        res_u = [];
 
 		  }
@@ -262,6 +269,7 @@
 		  }
 		  function processUploadRequest(e) {
 		    if(xhr.readyState == 4 && xhr.status == 200) {
+                      ip_addr = xhr.getResponseHeader("IP_addr");
 		      var endTime = new Date().getTime();
 		      var elapsedTime = endTime - startTime;
 		      var uploadSpeed = (s*8/(elapsedTime/1000));
@@ -279,7 +287,6 @@
 	                 div += tasks[i];
 	              }
 	              upload_fin = (sum/div).toFixed(4);
-				  report(upload_fin, "upload");
 	              res_u = [];
 	          }
 		    }
@@ -323,7 +330,6 @@
 	        sum += downloadSpeed * s * (slice_s/size);
 	        div += s * slice_s/size;
 	        download_fin = (sum/div).toFixed(4);
-			report(download_fin, "download");
 	        res_d = [];
 		  }
 		  function downloadProgress(e) {
@@ -337,6 +343,7 @@
 		  function processDownloadRequest() {
 		    //msg received 
 		    if (xhr.readyState == 4 && xhr.status == 200 ){
+                      ip_addr  = xhr.getResponseHeader("IP_addr");
 		      var endTime = new Date().getTime();
 		      var elapsedTime = endTime - startTime; //ms
 		      var downloadSpeed = (s*8/(elapsedTime/1000));
@@ -356,8 +363,6 @@
 	              }
 	              download_fin = (sum/div).toFixed(4);
 	              res_d = [];
-				  report(download_fin, "download");
-				  //download_fin = 1;
 		      	}
 		      }
 		    }
@@ -375,12 +380,21 @@
 			this.text.innerHTML = "Testing: "+x+"%";
 			
 		}
-		function report(s, t) {
-			var xhr_u = new XMLHttpRequest();
-			var url = "./server/report.php";
-			xhr_u.open('POST', url, true);
-			xhr_u.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xhr_u.send('speed='+s+'&type='+t);
+		function report(s, t, cb) {
+                    function renderTable() {
+                        var table = document.getElementById(t+"_result_table");
+                        var rws = table.getElementsByTagName("tr");
+                        table.removeChild(rws[9])
+                        table.insertBefore(cb(ip_addr, xhr_u.responseText, s), rws[0]);
+                    }
+                    var xhr_u = new XMLHttpRequest();
+		    var url = "./server/report.php";
+		    xhr_u.open('POST', url, true);
+		    xhr_u.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhr_u.onload = function() {
+                        renderTable();
+                    }
+                    xhr_u.send('speed='+s+'&type='+t);
 		}
 	    function disableBtn() {
 	    	btns[0].disabled = true;
@@ -389,7 +403,20 @@
 	    function enableBtn() {
 	    	btns[0].disabled = false;
 	    	btns[1].disabled = false;
-		}
+	    }
+            function createTr(ip, time, speed) {
+               function createTd(v) {
+                  var td = document.createElement("td");
+                  var text = document.createTextNode(v);
+                  td.appendChild(text);
+                  return td;
+               }
+	       var tr = document.createElement("tr");
+               tr.appendChild(createTd(ip));
+               tr.appendChild(createTd(time));
+               tr.appendChild(createTd(speed));
+               return tr;
+            }
 	})();	
 	</script>
 </head>
@@ -428,7 +455,7 @@
 							<th>速度(Mbps)</th>
 						</tr>	
 					</thead>
-					<tbody>
+					<tbody id="download_result_table">
 						<?php 
 							include 'server/history.php';
 							history("download");
@@ -456,7 +483,7 @@
 							<th>速度(Mbps)</th>
 						</tr>	
 					</thead>
-					<tbody>
+					<tbody id="upload_result_table">
 						<?php
 							history('upload');
 						?>
