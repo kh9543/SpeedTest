@@ -433,7 +433,7 @@
 		</header>
 		<section class="pannel">
 			<div style="padding: 10px">
-				<p>歡迎使用台大計中HTML5網路速度測試網頁，本頁不支援舊版IE(&#60;10)</p>
+				<p>歡迎使用台大計中HTML5網路速度測試網頁，請使用IE(&#62;10)，或Chrome(&#62;20)。</p>
 			</div>
 			<div class="download_pannel">
 				<div class="progress">

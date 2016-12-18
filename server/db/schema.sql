@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Nov 30, 2016 at 09:36 AM
+-- Generation Time: Dec 18, 2016 at 06:17 PM
 -- Server version: 5.6.28-0ubuntu0.15.04.1
 -- PHP Version: 5.6.10
 
@@ -17,18 +17,41 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `records`
+-- Table structure for table `download_record`
 --
 
-CREATE TABLE `records` (
-  `ip` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `speed` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` enum('upload','download') COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Ntu speed test record';
+CREATE TABLE `download_record` (
+  `ip` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `speed` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- --------------------------------------------------------
 
 --
--- Indexes for table `records`
+-- Table structure for table `upload_record`
 --
-ALTER TABLE `records`
+
+CREATE TABLE `upload_record` (
+  `ip` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `speed` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `download_record`
+--
+ALTER TABLE `download_record`
+  ADD PRIMARY KEY (`ip`,`time`);
+
+--
+-- Indexes for table `upload_record`
+--
+ALTER TABLE `upload_record`
   ADD PRIMARY KEY (`ip`,`time`);
