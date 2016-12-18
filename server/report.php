@@ -1,6 +1,6 @@
 <?php
-	include 'db/config.php';
-	$ip = $_SERVER['REMOTE_ADDR']; 
+    include 'db/config.php';
+    $ip = $_SERVER['REMOTE_ADDR']; 
     $speed = filter_var($_POST['speed'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $time = date('Y-m-d H:i:s');
     $type = $_POST['type'];
