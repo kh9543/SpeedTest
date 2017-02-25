@@ -148,7 +148,6 @@
 		var res_u = [];
                 var ip_add = "";
 	        var tasks = [1, 2, 4, 8, 16, 32, 64, 128];
-                download(0, 1000);
 	        window.onload = function() {
 			var downloadBar = new progressBar('download'); 
 			var uploadBar = new progressBar('upload');
@@ -352,18 +351,18 @@
 		      console.log(downloadSpeed);
 		      //console.log(elapsedTime)
 		      res_d.push(downloadSpeed);
-		      if(total_d < 12000 && s < 128 && s!=0)
+		      if(total_d < 12000 && s < 128)
 		          download(s*2, 12000 - total_d);
 		      else{
 		          console.log(res_d);
-	                  var sum = 0;
-	                  var div = 0;
-	                  for(var i = 0; i < res_d.length; i++ ) {
-	              	    sum += res_d[i]*tasks[i];
-	              	    div += tasks[i];
-	                  }
-	                  download_fin = (sum/div).toFixed(4);
-	                  res_d = [];
+	              var sum = 0;
+	              var div = 0;
+	              for(var i = 0; i < res_d.length; i++ ) {
+	              	sum += res_d[i]*tasks[i];
+	              	div += tasks[i];
+	              }
+	              download_fin = (sum/div).toFixed(4);
+	              res_d = [];
 		      	}
 		      }
 		    }

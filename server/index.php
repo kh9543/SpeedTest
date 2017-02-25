@@ -21,7 +21,10 @@ if (!empty($_GET['module']) && $_GET['module'] == 'download') {
     }
     // Define a content size for the response, defaults to 20MB.
     $contentSize = 20 * 1024 * 1024;
-    if (!empty($_GET['size'])) {
+    if($_GET['size'] == 0) {
+        exit();
+    }
+    else if (!empty($_GET['size'])) {
         $contentSize = intval($_GET['size']);
         $contentSize = min($contentSize, 200 * 1024 * 1024); // Maximum value: 200MB
     }
@@ -36,11 +39,11 @@ if (!empty($_GET['module']) && $_GET['module'] == 'download') {
     if (($lastBytes = $contentSize % $baseLength) > 0) {
         echo substr($baseString, 0, $lastBytes);
     }
-	//echo microtime_float()-$_SERVER['REQUEST_TIME_FLOAT'];
+    //error_log( microtime_float()-$_SERVER['REQUEST_TIME_FLOAT']);
 }
 
 else if (!empty($_GET['module']) && $_GET['module'] == 'upload') {
     header('Cache-Control: no-cache, no-store, no-transform');
     header('Pragma: no-cache'); // Support for HTTP 1.0
-	//echo microtime_float()-$_SERVER['REQUEST_TIME_FLOAT'];
+    //error_log(microtime_float()-$_SERVER['REQUEST_TIME_FLOAT']);
 }
