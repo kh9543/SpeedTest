@@ -57,10 +57,10 @@
 			color: #0B333C;
 			text-align: center;
 			background-color: #27A833;
-	    	        background: -webkit-linear-gradient(#27A833, #00800B); 
-	    	        background: -o-linear-gradient(#27A833, #00800B); 
-	    	        background: -moz-linear-gradient(#27A833, #00800B); 
-	    	        background: linear-gradient(#27A833, #00800B);
+			background: -webkit-linear-gradient(#27A833, #00800B); 
+			background: -o-linear-gradient(#27A833, #00800B); 
+			background: -moz-linear-gradient(#27A833, #00800B); 
+			background: linear-gradient(#27A833, #00800B);
 		}
 		.upload_pannel {
 			display: inline-block;
@@ -73,8 +73,8 @@
 			text-align: center;
 			background-color: #95ABB6;
 			background: -webkit-linear-gradient(#95ABB6, #6D838E); 
-	    	        background: -o-linear-gradient(#95ABB6, #6D838E); 
-	    	        background: -moz-linear-gradient(#95ABB6, #6D838E); 
+			background: -o-linear-gradient(#95ABB6, #6D838E); 
+			background: -moz-linear-gradient(#95ABB6, #6D838E); 
 			background: linear-gradient(#95ABB6, #6D838E);
 		}
 		.download_button {
@@ -84,8 +84,8 @@
 			padding: 8px;
 			cursor: pointer;
 			background: -webkit-linear-gradient(#C0E4C3, #64B16B); 
-	    	        background: -o-linear-gradient(#C0E4C3, #64B16B); 
-	    	        background: -moz-linear-gradient(#C0E4C3, #64B16B); 
+			background: -o-linear-gradient(#C0E4C3, #64B16B); 
+			background: -moz-linear-gradient(#C0E4C3, #64B16B); 
 			background: linear-gradient(#C0E4C3, #64B16B);
 			border-radius: 5px; 
 			opacity: 0.85;
@@ -134,9 +134,9 @@
 	(function() {
 		if(!window.Blob){
 			alert("抱歉，測速無法在您的瀏覽器運作，請使用 IE > 10 或 Chrome > 20，頁面三秒後將轉至Flash測速");
-                        setTimeout(function(){window.location.href = "http://speed.ntu.edu.tw";}, 3000 );
-                        return;
-                }
+			setTimeout(function(){window.location.href = "http://speed.ntu.edu.tw";}, 3000 );
+			return;
+		}
 		var btns;
 		var upload_err = 0;
 		var upload_fin = 0;
@@ -146,152 +146,153 @@
 		var total_d = 0;
 		var res_d = [];
 		var res_u = [];
-                var ip_add = "";
-	        var tasks = [1, 2, 4, 8, 16, 32, 64, 128];
-                download(0, 1000);
-	        window.onload = function() {
-			var downloadBar = new progressBar('download'); 
-			var uploadBar = new progressBar('upload');
-			btns = document.getElementsByClassName("btn");
-			document.getElementById('download_btn').onclick = function(){
-			    disableBtn();
-			    download(1, 12000);
-		            for(var i = 1; i<=31; i++)
-				(function(j){setTimeout(function timer(){
-			             if(download_err == 1){
-			                 downloadBar.loading(0);
-					 return;
-			             }
-				     downloadBar.loading(Math.round(j*100/31))
-				     if(j == 31 && download_fin > 0) {
-				         document.getElementById("download_result").value = download_fin;
-                                         report(download_fin, "download", createTr);
-					 downloadBar.loading(100);
-					 download_fin = 0;
-					 total_d = 0;
-					 enableBtn();
-				      }
-				      else if (j == 31 && download_fin == 1){
-				          var interval_id = setInterval(function(){
-					      if(download_fin > 0) {
-					          document.getElementById("download_result").value = download_fin;
-                                                  report(download_fin, "download", createTr);
-						  downloadBar.loading(100);
-						  download_fin = 0;
-						  total_d = 0;
-						  enableBtn();
-						  clearInterval(interval_id);
+		var ip_add = "";
+		var tasks = [1, 2, 4, 8, 16, 32, 64, 128];
+		download(0, 1000);
+		window.onload = function() {
+		var downloadBar = new progressBar('download'); 
+		var uploadBar = new progressBar('upload');
+		btns = document.getElementsByClassName("btn");
+		document.getElementById('download_btn').onclick = function(){
+			disableBtn();
+			download(1, 12000);
+			for(var i = 1; i<=31; i++)
+				(function(j){
+					setTimeout(function timer(){
+						if(download_err == 1){
+							downloadBar.loading(0);
+							return;
 						}
-						}, 500);
-					}
-			        }, j*400)})(i);
+						downloadBar.loading(Math.round(j*100/31))
+						if(j == 31 && download_fin > 0) {
+							document.getElementById("download_result").value = download_fin;
+							report(download_fin, "download", createTr);
+							downloadBar.loading(100);
+							download_fin = 0;
+							total_d = 0;
+							enableBtn();
+						}
+						else if (j == 31 && download_fin == 1){
+							var interval_id = setInterval(function(){
+								if(download_fin > 0) {
+									document.getElementById("download_result").value = download_fin;
+									report(download_fin, "download", createTr);
+									downloadBar.loading(100);
+									download_fin = 0;
+									total_d = 0;
+									enableBtn();
+									clearInterval(interval_id);
+								}
+							}, 500);
+						}
+					}, j*400)})(i);
 			}
 			document.getElementById('upload_btn').onclick = function(){
-                            disableBtn();
-			    upload(1, 12000);
-	                    for(var i = 1; i<=31; i++)
-	                        (function(j){setTimeout(function timer(){
-	                	    if(upload_err == 1) {
-	                		uploadBar.loading(0);
-	                		return;
-	                	}
-	                	uploadBar.loading(Math.round(j*100/31))
-	                	if(j == 31 && upload_fin > 0) {
-				    document.getElementById("upload_result").value = upload_fin;
-                                    report(upload_fin, "upload", createTr);
-				    uploadBar.loading(100);
-				    upload_fin = 0;
-				    total_u = 0;
-				    enableBtn();
+				disableBtn();
+				upload(1, 12000);
+				for(var i = 1; i<=31; i++)
+					(function(j){
+						setTimeout(function timer(){
+							if(upload_err == 1) {
+								uploadBar.loading(0);
+								return;
+							}
+							uploadBar.loading(Math.round(j*100/31))
+							if(j == 31 && upload_fin > 0) {
+								document.getElementById("upload_result").value = upload_fin;
+								report(upload_fin, "upload", createTr);
+								uploadBar.loading(100);
+								upload_fin = 0;
+								total_u = 0;
+								enableBtn();
+							}
+							else if (j == 31 && upload_fin == 0){
+								var interval_id = setInterval(function(){
+									if(upload_fin > 0) {
+										document.getElementById("upload_result").value = upload_fin;
+									report(upload_fin, "upload", createTr);
+									uploadBar.loading(100);
+									upload_fin = 0;
+									total_u = 0;
+									enableBtn();
+									clearInterval(interval_id);
+									}
+								}, 500);
+							}
+						}, j*400)})(i);
 				}
-	                	else if (j == 31 && upload_fin == 0){
-				    var interval_id = setInterval(function(){
-				        if(upload_fin > 0) {
-				 	    document.getElementById("upload_result").value = upload_fin;
-                                            report(upload_fin, "upload", createTr);
-					    uploadBar.loading(100);
-					    upload_fin = 0;
-					    total_u = 0;
-					    enableBtn();
-					    clearInterval(interval_id);
-					}
-				    }, 500);
-				}
-	                }, j*400)})(i);
-	            }
 		}
 		function upload(s, t) {
-		  console.log("Start upload: "+ s);
-		  var xhr = new XMLHttpRequest();
-		  var url = "./server/?module=upload";
-		  var size = s * 1024 * 1024; //s'MB
-		  var buffer = new ArrayBuffer(size);
-		  var int8View = new Int8Array(buffer);
-		  var blob = new Blob([int8View], {type: "application/octet-stream"});
-		  var records = [];
-		  xhr.upload.addEventListener("progress", uploadProgress, false);
-		  xhr.addEventListener("error", errorHandler_u, false);
-		  xhr.open('POST', url, true);
-		  xhr.timeout = t;
-                  xhr.onreadystatechange = processUploadRequest;
-                  xhr.ontimeout = uploadTimeout;
-		  xhr.setRequestHeader("Content-Type", "application/octet-stream");
-		  xhr.send(blob); 
-		  var startTime = new Date().getTime();
-		  function uploadTimeout(e) {
-		      var slice_s = 0;
-		      var upload_speed = 0;
-		      var sum = 0;
-	              var div = 0;
-		      if(records.length == 2) {
-		          slice_s = records[1].s - records[0].s;
-		  	  uploadSpeed = ((slice_s*8/1024/1024)/((records[1].t - records[0].t)/1000));
-			  console.log(uploadSpeed);
-		      }
-	              for(var i = 0; i < res_u.length; i++ ) {
-	                  sum += res_u[i]*tasks[i];
-	                  div += tasks[i];
-	              }
-	              sum += uploadSpeed * s * (slice_s/size);
-	              div += s * slice_s/size;
-	              upload_fin = (sum/div).toFixed(4);
-	              res_u = [];
-
-		  }
-		  function uploadProgress(e) {
-		      if(e.lengthComputable) {
-		          slice = {t: e.timeStamp,
-		  		   s: e.loaded};
-		          if (records.length == 0)
-		  	      records[0] = slice;
-		          else
-		  	      records[1] = slice;	
-	              }
-		  }
-		  function processUploadRequest(e) {
-		    if(xhr.readyState == 4 && xhr.status == 200) {
-                        ip_addr = xhr.getResponseHeader("IP_addr");
-		        var endTime = new Date().getTime();
-		        var elapsedTime = endTime - startTime;
-		        var uploadSpeed = (s*8/(elapsedTime/1000));
-		        total_u = total_u + elapsedTime;
-		        console.log(uploadSpeed);
-	                res_u.push(uploadSpeed);
-		        if (total_u < 12000 && s < 128)
-		            upload(s*2, 12000 - total_u);
-	                else {
-	                    console.log(res_u);
-	                    var sum = 0;
-	                    var div = 0;
-	                    for(var i = 0; i < res_u.length; i++ ) {
-	                        sum += res_u[i]*tasks[i];
-	                        div += tasks[i];
-	                    }
-	                    upload_fin = (sum/div).toFixed(4);
-	                    res_u = [];
-	               }
-		    }
-		  }
+			console.log("Start upload: "+ s);
+			var xhr = new XMLHttpRequest();
+			var url = "./server/?module=upload";
+			var size = s * 1024 * 1024; //s'MB
+			var buffer = new ArrayBuffer(size);
+			var int8View = new Int8Array(buffer);
+			var blob = new Blob([int8View], {type: "application/octet-stream"});
+			var records = [];
+			xhr.upload.addEventListener("progress", uploadProgress, false);
+			xhr.addEventListener("error", errorHandler_u, false);
+			xhr.open('POST', url, true);
+			xhr.timeout = t;
+			xhr.onreadystatechange = processUploadRequest;
+			xhr.ontimeout = uploadTimeout;
+			xhr.setRequestHeader("Content-Type", "application/octet-stream");
+			xhr.send(blob); 
+			var startTime = new Date().getTime();
+			function uploadTimeout(e) {
+				var slice_s = 0;
+				var upload_speed = 0;
+				var sum = 0;
+				var div = 0;
+				if(records.length == 2) {
+					slice_s = records[1].s - records[0].s;
+					uploadSpeed = ((slice_s*8/1024/1024)/((records[1].t - records[0].t)/1000));
+					console.log(uploadSpeed);
+				}
+				for(var i = 0; i < res_u.length; i++ ) {
+					sum += res_u[i]*tasks[i];
+					div += tasks[i];
+				}
+				sum += uploadSpeed * s * (slice_s/size);
+				div += s * slice_s/size;
+				upload_fin = (sum/div).toFixed(4);
+				res_u = [];
+			}
+			function uploadProgress(e) {
+				if(e.lengthComputable) {
+					slice = {t: e.timeStamp,
+							s: e.loaded};
+					if (records.length == 0)
+						records[0] = slice;
+					else
+						records[1] = slice;	
+				}
+			}
+			function processUploadRequest(e) {
+				if(xhr.readyState == 4 && xhr.status == 200) {
+					ip_addr = xhr.getResponseHeader("IP_addr");
+					var endTime = new Date().getTime();
+					var elapsedTime = endTime - startTime;
+					var uploadSpeed = (s*8/(elapsedTime/1000));
+					total_u = total_u + elapsedTime;
+					console.log(uploadSpeed);
+					res_u.push(uploadSpeed);
+					if (total_u < 12000 && s < 128)
+						upload(s*2, 12000 - total_u);
+					else {
+						console.log(res_u);
+						var sum = 0;
+						var div = 0;
+						for(var i = 0; i < res_u.length; i++ ) {
+							sum += res_u[i]*tasks[i];
+							div += tasks[i];
+						}
+						upload_fin = (sum/div).toFixed(4);
+						res_u = [];
+					}
+				}
+			}
 		}
 		function errorHandler_u(t) {
 			alert("發生錯誤，請試著重整網頁");
@@ -300,73 +301,73 @@
 
 		// Creating Dowload Speed Test request to server
 		function download(s, t) {
-		  console.log("Start download: "+s);
-		  var xhr = new XMLHttpRequest();
-		  var url = "./server/";
-		  var params = "module=download&size=";
-		  var size = s * 1024 *1024; // s'MB
-		  var records = [];
-		  xhr.addEventListener("progress", downloadProgress, false);
-		  xhr.addEventListener("error", errorHandler_d, false);
-		  xhr.open('GET', url+"?"+params+size, true);
-		  xhr.timeout = t;
-                  xhr.onreadystatechange = processDownloadRequest;
-                  xhr.ontimeout = downloadTimeout;
-		  xhr.send();
-		  var startTime = new Date().getTime();
-		  function downloadTimeout(e) {
-		      var slice_s = 0;
-		      var downloadSpeed = 0;
-		      var sum = 0;
-	              var div = 0;
-		      if(records.length == 2) {
-		          slice_s = records[1].s - records[0].s;
-		          downloadSpeed = ((slice_s*8/1024/1024)/((records[1].t - records[0].t)/1000));
-		          console.log(downloadSpeed);
-		      }
-	              for(var i = 0; i < res_d.length; i++ ) {
-	                  sum += res_d[i]*tasks[i];
-	                  div += tasks[i];
-	              }
-	              sum += downloadSpeed * s * (slice_s/size);
-	              div += s * slice_s/size;
-	              download_fin = (sum/div).toFixed(4);
-	              res_d = [];
-		  }
-		  function downloadProgress(e) {
-		      slice = {t: e.timeStamp,
-		  	       s: e.loaded};
-		      if (records.length == 0)
-		          records[0] = slice;
-		      else
-		  	  records[1] = slice;
-		  }
-		  function processDownloadRequest() {
-		    //msg received 
-		    if (xhr.readyState == 4 && xhr.status == 200 ){
-                      ip_addr  = xhr.getResponseHeader("IP_addr");
-		      var endTime = new Date().getTime();
-		      var elapsedTime = endTime - startTime; //ms
-		      var downloadSpeed = (s*8/(elapsedTime/1000));
-		      total_d = total_d + elapsedTime;
-		      console.log(downloadSpeed);
-		      //console.log(elapsedTime)
-		      res_d.push(downloadSpeed);
-		      if(total_d < 12000 && s < 128 && s!=0)
-		          download(s*2, 12000 - total_d);
-		      else{
-		          console.log(res_d);
-	                  var sum = 0;
-	                  var div = 0;
-	                  for(var i = 0; i < res_d.length; i++ ) {
-	              	    sum += res_d[i]*tasks[i];
-	              	    div += tasks[i];
-	                  }
-	                  download_fin = (sum/div).toFixed(4);
-	                  res_d = [];
-		      	}
-		      }
-		    }
+			console.log("Start download: "+s);
+			var xhr = new XMLHttpRequest();
+			var url = "./server/";
+			var params = "module=download&size=";
+			var size = s * 1024 *1024; // s'MB
+			var records = [];
+			xhr.addEventListener("progress", downloadProgress, false);
+			xhr.addEventListener("error", errorHandler_d, false);
+			xhr.open('GET', url+"?"+params+size, true);
+			xhr.timeout = t;
+			xhr.onreadystatechange = processDownloadRequest;
+			xhr.ontimeout = downloadTimeout;
+			xhr.send();
+			var startTime = new Date().getTime();
+			function downloadTimeout(e) {
+				var slice_s = 0;
+				var downloadSpeed = 0;
+				var sum = 0;
+				var div = 0;
+				if(records.length == 2) {
+					slice_s = records[1].s - records[0].s;
+					downloadSpeed = ((slice_s*8/1024/1024)/((records[1].t - records[0].t)/1000));
+					console.log(downloadSpeed);
+				}
+				for(var i = 0; i < res_d.length; i++ ) {
+					sum += res_d[i]*tasks[i];
+					div += tasks[i];
+				}
+				sum += downloadSpeed * s * (slice_s/size);
+				div += s * slice_s/size;
+				download_fin = (sum/div).toFixed(4);
+				res_d = [];
+			}
+			function downloadProgress(e) {
+				slice = {t: e.timeStamp,
+						s: e.loaded};
+				if (records.length == 0)
+					records[0] = slice;
+				else
+					records[1] = slice;
+			}
+			function processDownloadRequest() {
+			//msg received 
+				if (xhr.readyState == 4 && xhr.status == 200 ){
+					ip_addr  = xhr.getResponseHeader("IP_addr");
+					var endTime = new Date().getTime();
+					var elapsedTime = endTime - startTime; //ms
+					var downloadSpeed = (s*8/(elapsedTime/1000));
+					total_d = total_d + elapsedTime;
+					console.log(downloadSpeed);
+					//console.log(elapsedTime)
+					res_d.push(downloadSpeed);
+					if(total_d < 12000 && s < 128 && s!=0)
+						download(s*2, 12000 - total_d);
+					else{
+						console.log(res_d);
+						var sum = 0;
+						var div = 0;
+						for(var i = 0; i < res_d.length; i++ ) {
+							sum += res_d[i]*tasks[i];
+							div += tasks[i];
+						}
+						download_fin = (sum/div).toFixed(4);
+						res_d = [];
+					}
+				}
+			}
 		}
 		function errorHandler_d(t) {
 			alert("發生錯誤，請試著重整網頁");
@@ -382,44 +383,44 @@
 			
 		}
 		function report(s, t, cb) {
-                    function renderTable() {
-                        var table = document.getElementById(t+"_result_table");
-                        var rws = table.getElementsByTagName("tr");
-                        table.removeChild(rws[9])
-                        console.log(xhr_u.responseText);
-                        table.insertBefore(cb(ip_addr, xhr_u.responseText, s), rws[0]);
-                    }
-                    var xhr_u = new XMLHttpRequest();
-		    var url = "./server/report.php";
-		    xhr_u.open('POST', url, true);
-		    xhr_u.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                    xhr_u.onload = function() {
-                        renderTable();
-                    }
-                    xhr_u.send('speed='+s+'&type='+t);
+			function renderTable() {
+				var table = document.getElementById(t+"_result_table");
+				var rws = table.getElementsByTagName("tr");
+				table.removeChild(rws[9])
+				console.log(xhr_u.responseText);
+				table.insertBefore(cb(ip_addr, xhr_u.responseText, s), rws[0]);
+			}
+			var xhr_u = new XMLHttpRequest();
+			var url = "./server/report.php";
+			xhr_u.open('POST', url, true);
+			xhr_u.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr_u.onload = function() {
+				renderTable();
+			}
+			xhr_u.send('speed='+s+'&type='+t);
 		}
-	    function disableBtn() {
-	    	btns[0].disabled = true;
-	    	btns[1].disabled = true;
-	    }
-	    function enableBtn() {
-	    	btns[0].disabled = false;
-	    	btns[1].disabled = false;
-	    }
-            function createTr(ip, time, speed) {
-               function createTd(v) {
-                  var td = document.createElement("td");
-                  var text = document.createTextNode(v);
-                  td.appendChild(text);
-                  return td;
-               }
-	       var tr = document.createElement("tr");
-               tr.appendChild(createTd(ip));
-               tr.appendChild(createTd(time));
-               tr.appendChild(createTd(speed));
-               return tr;
-            }
-	})();	
+		function disableBtn() {
+			btns[0].disabled = true;
+			btns[1].disabled = true;
+		}
+		function enableBtn() {
+			btns[0].disabled = false;
+			btns[1].disabled = false;
+		}
+		function createTr(ip, time, speed) {
+			function createTd(v) {
+				var td = document.createElement("td");
+				var text = document.createTextNode(v);
+				td.appendChild(text);
+				return td;
+			}
+			var tr = document.createElement("tr");
+			tr.appendChild(createTd(ip));
+			tr.appendChild(createTd(time));
+			tr.appendChild(createTd(speed));
+			return tr;
+		}
+	})();
 	</script>
 </head>
 <body>
